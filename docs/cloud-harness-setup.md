@@ -44,11 +44,11 @@ the harness is skipped just as it is for a missing instance URL or API token.
 With nothing set:
 
 ```
-$ harness-bench matrix --harnesses stagehand,coze-studio,openclaw --models gpt-4o-mini
-harness       model         status
-stagehand     gpt-4o-mini   skipped:missing_credential:BROWSERBASE_API_KEY
-coze-studio   gpt-4o-mini   skipped:missing_credential:COZE_INSTANCE_URL,COZE_API_TOKEN,COZE_WORKFLOW_ID
-openclaw      gpt-4o-mini   eligible
+$ harness-bench matrix --harness stagehand --harness coze-studio --harness openclaw --model gpt-4o-mini --case fixtures/smoke.json
+total=3 eligible=1 skipped=2
+[SKIP] stagehand      gpt-4o-mini            fixtures/smoke.json  (missing_credential:BROWSERBASE_API_KEY)
+[SKIP] coze-studio    gpt-4o-mini            fixtures/smoke.json  (missing_credential:COZE_INSTANCE_URL,COZE_API_TOKEN,COZE_WORKFLOW_ID)
+[OK]   openclaw       gpt-4o-mini            fixtures/smoke.json
 ```
 
 The leaderboard preserves these entries verbatim so you can see exactly what credentials to set to unblock a slot.
