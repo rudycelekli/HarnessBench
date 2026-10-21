@@ -119,8 +119,14 @@ harness-bench harnesses
 # claw-code      ready
 # browser-use    ready
 # stagehand      skipped: set BROWSERBASE_API_KEY
-# coze-studio    skipped: set COZE_INSTANCE_URL, COZE_API_TOKEN
+# coze-studio    skipped: set COZE_INSTANCE_URL, COZE_API_TOKEN, COZE_WORKFLOW_ID
 ```
+
+**执行状态：**目前可以列出 Harness 元数据并预览 matrix。实际 `run` 和非 dry-run
+`batch` 依赖尚未接入的 ClawBench 执行 API；仅升级 ClawBench 版本不能解决这一问题
+（[#8](https://github.com/reacher-z/HarnessBench/issues/8)）。本仓库还缺少 browser-use、
+Stagehand 和 Coze 的启动驱动（[#5](https://github.com/reacher-z/HarnessBench/issues/5)）。
+凭证状态 `ready` 不代表执行后端已可用。
 
 **2. 预览将要运行的 matrix**（无副作用）：
 
@@ -132,7 +138,7 @@ harness-bench matrix \
     --case    007-daily-life-travel-expedia
 ```
 
-**3. 端到端跑一组 triple：**
+**3. 单次执行命令（执行集成尚未完成）：**
 
 ```bash
 harness-bench run \
@@ -141,15 +147,17 @@ harness-bench run \
     --case    001-daily-life-food-uber-eats
 ```
 
-结果落在 `./harness-output/<harness>/<model>/<case>-<timestamp>/`，包含完整的五层录制 -- 目录结构和 ClawBench 完全一致，所以一份分析脚本两边通用。
+计划的输出目录为 `./harness-output/<harness>/<model>/<case>-<timestamp>/`。
+当前 checkout 的 `run` 命令尚不能生成这些录制结果。
 
-**4. Matrix 批跑**（跑完所有合格的 triple）：
+**4. Matrix 批处理命令**（执行集成尚未完成）：
 
 ```bash
 harness-bench batch \
     --harness openclaw --harness hermes --harness browser-use --harness claw-code \
     --model   claude-sonnet-4-6 \
-    --case    $(cat fixtures/lite.txt)
+    --case    001-daily-life-food-uber-eats \
+    --case    007-daily-life-travel-expedia
 ```
 
 **5. 渲染排行榜：**
@@ -169,7 +177,7 @@ harness-bench leaderboard --results-dir ./harness-output/
 | `claw-code` | [ultraworkers/claw-code](https://github.com/ultraworkers/claw-code) | Rust | &mdash; | 原生 Rust agent 循环，无 GIL 并发。 |
 | `browser-use` | [browser-use/browser-use](https://github.com/browser-use/browser-use) | Python | &mdash; | 社区热门的 Playwright-based harness。 |
 | `stagehand` | [browserbase/stagehand](https://github.com/browserbase/stagehand) | Node/TS | **是** | BrowserBase 的 Stagehand -- 需要 `BROWSERBASE_API_KEY`。 |
-| `coze-studio` | [coze-dev/coze-studio](https://github.com/coze-dev/coze-studio) | Web | **是** | Coze Studio 流程执行器 -- 需要 `COZE_INSTANCE_URL` + `COZE_API_TOKEN`。 |
+| `coze-studio` | [coze-dev/coze-studio](https://github.com/coze-dev/coze-studio) | Web | **是** | Coze Studio 流程执行器 -- 需要 `COZE_INSTANCE_URL` + `COZE_API_TOKEN` + `COZE_WORKFLOW_ID`。 |
 
 云端 Harness **可选启用**：未提供凭证时在 matrix 中标记为 `skipped:missing_credential:<VAR>` -- **绝不会被静默记 0 分**。更多 Harness 通过独立 PR 加入；见 [`docs/scout-2026-04-16.md`](docs/scout-2026-04-16.md)。
 
