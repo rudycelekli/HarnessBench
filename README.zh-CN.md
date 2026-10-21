@@ -149,7 +149,8 @@ harness-bench run \
 harness-bench batch \
     --harness openclaw --harness hermes --harness browser-use --harness claw-code \
     --model   claude-sonnet-4-6 \
-    --case    $(cat fixtures/lite.txt)
+    --case    001-daily-life-food-uber-eats \
+    --case    007-daily-life-travel-expedia
 ```
 
 **5. 渲染排行榜：**
