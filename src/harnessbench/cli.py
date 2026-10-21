@@ -15,6 +15,7 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
+from uuid import uuid4
 
 import click
 
@@ -81,13 +82,27 @@ def matrix_cmd(harness: tuple[str, ...], model: tuple[str, ...], case: tuple[str
     default=Path("harness-output"),
 )
 @click.option("--no-upload/--upload", default=True, help="Skip HF upload unless --upload is set.")
-def run_cmd(harness: str, model: str, case: str, output_dir: Path, no_upload: bool) -> None:
+@click.option(
+    "--backend", type=click.Choice(["plugin", "clawbench-cli"]), default="plugin",
+    show_default=True, help="Explicit native backend uses ClawBench's own drivers.",
+)
+def run_cmd(
+    harness: str, model: str, case: str, output_dir: Path, no_upload: bool, backend: str,
+) -> None:
     """Run one (harness, model, case) through the ClawBench pipeline."""
     regs = {r.spec.name: r for r in matrix_mod.discover_registrations()}
     reg = regs.get(harness)
     if reg is None:
         click.echo(f"error: harness '{harness}' not registered", err=True)
         sys.exit(2)
+    if backend == "clawbench-cli":
+        from harnessbench import native
+
+        native.validate_harnesses([harness])
+        native.run_case(
+            case=case, model=model, harness=harness, output_dir=output_dir, no_upload=no_upload,
+        )
+        return
     missing = reg.missing_credentials()
     if missing:
         click.echo(
@@ -129,6 +144,10 @@ def run_cmd(harness: str, model: str, case: str, output_dir: Path, no_upload: bo
 )
 @click.option("--dry-run", is_flag=True, default=False)
 @click.option("--no-upload/--upload", default=True, help="Skip HF upload unless --upload is set.")
+@click.option(
+    "--backend", type=click.Choice(["plugin", "clawbench-cli"]), default="plugin",
+    show_default=True, help="Explicit native backend uses ClawBench's own drivers.",
+)
 def batch_cmd(
     harness: tuple[str, ...],
     model: tuple[str, ...],
@@ -136,6 +155,7 @@ def batch_cmd(
     output_dir: Path,
     dry_run: bool,
     no_upload: bool,
+    backend: str,
 ) -> None:
     """Matrix-expand, then run every eligible triple."""
     cases = [{"id": c} for c in case]
@@ -147,6 +167,23 @@ def batch_cmd(
     if dry_run:
         for s in specs:
             click.echo(f"{s.harness} {s.model} {s.case_id} -> {s.status}")
+        return
+
+    if backend == "clawbench-cli":
+        from harnessbench import native
+
+        # Validate the entire batch before any eligible task can start.
+        native.validate_harnesses(harness)
+        for s in specs:
+            if not s.is_eligible:
+                click.echo(f"skip: {s.harness} {s.model} {s.case_id} ({s.skip_reason})")
+                continue
+            native.run_case(
+                case=s.case_id, model=s.model, harness=s.harness,
+                # ClawBench's second-resolution run names can collide for
+                # tasks with the same basename; give each native cell its own base.
+                output_dir=output_dir / f"cell-{uuid4().hex}", no_upload=no_upload,
+            )
         return
 
     try:
