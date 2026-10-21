@@ -122,8 +122,8 @@ harness-bench harnesses
 # coze-studio    skipped: set COZE_INSTANCE_URL, COZE_API_TOKEN
 ```
 
-**执行状态：**目前可以列出 Harness 元数据并预览 matrix。实际 `run` 和非 dry-run
-`batch` 依赖尚未接入的 ClawBench 执行 API；仅升级 ClawBench 版本不能解决这一问题
+**执行状态：**目前可以列出 Harness 元数据并预览 matrix。`run` 和非 dry-run `batch` 的默认 `plugin` 后端
+依赖尚未接入的 ClawBench 执行 API；仅升级 ClawBench 版本不能解决这一问题
 （[#8](https://github.com/reacher-z/HarnessBench/issues/8)）。本仓库还缺少 browser-use、
 Stagehand 和 Coze 的启动驱动（[#5](https://github.com/reacher-z/HarnessBench/issues/5)）。
 凭证状态 `ready` 不代表执行后端已可用。
@@ -148,7 +148,7 @@ harness-bench run \
 ```
 
 计划的输出目录为 `./harness-output/<harness>/<model>/<case>-<timestamp>/`。
-当前 checkout 的 `run` 命令尚不能生成这些录制结果。
+默认 plugin 后端尚不能生成这些录制结果。
 
 **4. Matrix 批处理命令**（执行集成尚未完成）：
 

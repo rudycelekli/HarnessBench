@@ -112,7 +112,7 @@ git clone https://github.com/reacher-z/HarnessBench.git && cd HarnessBench && uv
 **Prerequisites:** [Python 3.10+](https://python.org), [uv](https://docs.astral.sh/uv/), and a container engine -- [Docker](https://www.docker.com/) **or** [Podman](https://podman.io/). Same engine detection as ClawBench; force one with `export CONTAINER_ENGINE=docker`.
 
 **Execution status:** listing harness metadata and previewing matrices work locally.
-Actual `run` and non-dry-run `batch` execution currently require a ClawBench
+The default `plugin` backend for `run` and non-dry-run `batch` requires a ClawBench
 integration API that released ClawBench packages do not expose. Installing a newer
 ClawBench version alone does not supply that API. See [execution integration #8](https://github.com/reacher-z/HarnessBench/issues/8).
 The browser-use, Stagehand and Coze launcher drivers are also missing from this
@@ -151,7 +151,7 @@ harness-bench run \
 ```
 
 The intended output layout is `./harness-output/<harness>/<model>/<case>-<timestamp>/`.
-This checkout does not yet produce those recordings through the `run` command.
+The default plugin backend does not yet produce those recordings.
 
 **4. Matrix batch invocation** (execution integration pending):
 
