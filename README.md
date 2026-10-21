@@ -569,3 +569,12 @@ Open to contributions -- new harness adapters, leaderboard submissions, or evalu
     <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=reacher-z/HarnessBench&type=Date" />
   </picture>
 </a>
+
+### Native ClawBench CLI backend
+
+To use ClawBench's currently published `clawbench-run` entry point, select
+`harness-bench run --backend clawbench-cli` (also available for `batch`). This
+explicit backend runs ClawBench's own drivers for four shared harness names and
+requires its task format and workspace configuration. See
+[the native backend guide](docs/native-clawbench.md) for setup, judging, raw output
+and supported harnesses. The default plugin backend is unchanged.
