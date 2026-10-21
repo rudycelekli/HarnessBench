@@ -111,6 +111,14 @@ git clone https://github.com/reacher-z/HarnessBench.git && cd HarnessBench && uv
 
 **Prerequisites:** [Python 3.10+](https://python.org), [uv](https://docs.astral.sh/uv/), and a container engine -- [Docker](https://www.docker.com/) **or** [Podman](https://podman.io/). Same engine detection as ClawBench; force one with `export CONTAINER_ENGINE=docker`.
 
+**Execution status:** listing harness metadata and previewing matrices work locally.
+Actual `run` and non-dry-run `batch` execution currently require a ClawBench
+integration API that released ClawBench packages do not expose. Installing a newer
+ClawBench version alone does not supply that API. See [execution integration #8](https://github.com/reacher-z/HarnessBench/issues/8).
+The browser-use, Stagehand and Coze launcher drivers are also missing from this
+checkout ([#5](https://github.com/reacher-z/HarnessBench/issues/5)). A `ready`
+credential status does not establish that its execution backend is available.
+
 **1. List registered harnesses:**
 
 ```bash
@@ -133,7 +141,7 @@ harness-bench matrix \
     --case    007-daily-life-travel-expedia
 ```
 
-**3. Run one triple end-to-end:**
+**3. Single-run invocation (execution integration pending):**
 
 ```bash
 harness-bench run \
@@ -142,9 +150,10 @@ harness-bench run \
     --case    001-daily-life-food-uber-eats
 ```
 
-Results land in `./harness-output/<harness>/<model>/<case>-<timestamp>/` with the full five-layer recording -- identical layout to ClawBench so a single analysis script handles both.
+The intended output layout is `./harness-output/<harness>/<model>/<case>-<timestamp>/`.
+This checkout does not yet produce those recordings through the `run` command.
 
-**4. Matrix batch** (all eligible triples):
+**4. Matrix batch invocation** (execution integration pending):
 
 ```bash
 harness-bench batch \
