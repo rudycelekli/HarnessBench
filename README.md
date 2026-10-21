@@ -142,6 +142,9 @@ harness-bench run \
     --case    001-daily-life-food-uber-eats
 ```
 
+Uploads are disabled by default. Add `--upload` to `run` or `batch` to opt in;
+`--no-upload` explicitly keeps results local.
+
 Results land in `./harness-output/<harness>/<model>/<case>-<timestamp>/` with the full five-layer recording -- identical layout to ClawBench so a single analysis script handles both.
 
 **4. Matrix batch** (all eligible triples):

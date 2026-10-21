@@ -80,7 +80,7 @@ def matrix_cmd(harness: tuple[str, ...], model: tuple[str, ...], case: tuple[str
     type=click.Path(file_okay=False, path_type=Path),
     default=Path("harness-output"),
 )
-@click.option("--no-upload", is_flag=True, default=True, help="Skip HF upload (default on).")
+@click.option("--no-upload/--upload", default=True, help="Skip HF upload unless --upload is set.")
 def run_cmd(harness: str, model: str, case: str, output_dir: Path, no_upload: bool) -> None:
     """Run one (harness, model, case) through the ClawBench pipeline."""
     regs = {r.spec.name: r for r in matrix_mod.discover_registrations()}
@@ -128,12 +128,14 @@ def run_cmd(harness: str, model: str, case: str, output_dir: Path, no_upload: bo
     default=Path("harness-output"),
 )
 @click.option("--dry-run", is_flag=True, default=False)
+@click.option("--no-upload/--upload", default=True, help="Skip HF upload unless --upload is set.")
 def batch_cmd(
     harness: tuple[str, ...],
     model: tuple[str, ...],
     case: tuple[str, ...],
     output_dir: Path,
     dry_run: bool,
+    no_upload: bool,
 ) -> None:
     """Matrix-expand, then run every eligible triple."""
     cases = [{"id": c} for c in case]
@@ -166,7 +168,7 @@ def batch_cmd(
             model=s.model,
             harness=s.harness,
             output_dir=output_dir,
-            no_upload=True,
+            no_upload=no_upload,
         )
 
 
