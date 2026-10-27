@@ -39,6 +39,9 @@ jobs:
           cd "$RUNNER_TEMP"
           "$RUNNER_TEMP/wheel-env/bin/harness-bench" version
           "$RUNNER_TEMP/wheel-env/bin/harness-bench" harnesses
+          mkdir "$RUNNER_TEMP/native-empty"
+          "$RUNNER_TEMP/wheel-env/bin/harness-bench" native-report --results-dir "$RUNNER_TEMP/native-empty" --format json > "$RUNNER_TEMP/native-report.json"
+          "$RUNNER_TEMP/wheel-env/bin/python" -c 'import json,sys; assert json.load(open(sys.argv[1]))["attempt_count"] == 0' "$RUNNER_TEMP/native-report.json"
   stagehand-sdk-import:
     runs-on: ubuntu-latest
     steps:
